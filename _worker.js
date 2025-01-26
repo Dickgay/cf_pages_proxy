@@ -1,16 +1,15 @@
 export default {
   async fetch(request, env) {
-    let url = new URL(request.url);
-    let targetUrl = new URL(env.TARGET_URL);
+    // 获取目标后端地址
+    const targetUrl = new URL(env.TARGET_URL);
+    const requestUrl = new URL(request.url);
 
-    // 拼接路径和查询参数
-    url.pathname = url.pathname;
-    url.search = url.search;
-    url.protocol = targetUrl.protocol;
-    url.hostname = targetUrl.hostname;
-    url.port = targetUrl.port;
+    // 替换目标地址的主机和协议
+    requestUrl.protocol = targetUrl.protocol;
+    requestUrl.hostname = targetUrl.hostname;
+    requestUrl.port = targetUrl.port;
 
-    // 保留请求方法、头部和主体，直接转发
-    return fetch(new Request(url, request));
+    // 转发请求，保持原始信息
+    return fetch(new Request(requestUrl.toString(), request));
   },
 };
